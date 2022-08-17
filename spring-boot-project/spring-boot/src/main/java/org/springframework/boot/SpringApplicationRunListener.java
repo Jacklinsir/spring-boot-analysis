@@ -43,6 +43,7 @@ public interface SpringApplicationRunListener {
 	 * early initialization.
 	 * @param bootstrapContext the bootstrap context
 	 */
+	//在运行方法第一次启动时立即调用。可以用于非常早期的初始化。
 	default void starting(ConfigurableBootstrapContext bootstrapContext) {
 	}
 
@@ -52,6 +53,7 @@ public interface SpringApplicationRunListener {
 	 * @param bootstrapContext the bootstrap context
 	 * @param environment the environment
 	 */
+	//在环境准备好，但在ApplicationContext创建之前
 	default void environmentPrepared(ConfigurableBootstrapContext bootstrapContext,
 			ConfigurableEnvironment environment) {
 	}
@@ -61,6 +63,7 @@ public interface SpringApplicationRunListener {
 	 * before sources have been loaded.
 	 * @param context the application context
 	 */
+	//在ApplicationContext创建和准备好，但在资源加载前
 	default void contextPrepared(ConfigurableApplicationContext context) {
 	}
 
@@ -69,6 +72,7 @@ public interface SpringApplicationRunListener {
 	 * refreshed.
 	 * @param context the application context
 	 */
+	//application context 加载完，但在刷新之前
 	default void contextLoaded(ConfigurableApplicationContext context) {
 	}
 
@@ -80,6 +84,7 @@ public interface SpringApplicationRunListener {
 	 * @param timeTaken the time taken to start the application or {@code null} if unknown
 	 * @since 2.6.0
 	 */
+	//context 刷新完并且 application 已完成，但是在 CommandLineRunner 和 ApplicationRunner 被调用前
 	default void started(ConfigurableApplicationContext context, Duration timeTaken) {
 		started(context);
 	}
@@ -106,6 +111,7 @@ public interface SpringApplicationRunListener {
 	 * unknown
 	 * @since 2.6.0
 	 */
+	//在run方法运行结束前调用，当application context 已经刷新 并且 CommandLineRunner 和 ApplicationRunner也已经调用
 	default void ready(ConfigurableApplicationContext context, Duration timeTaken) {
 		running(context);
 	}
@@ -130,6 +136,7 @@ public interface SpringApplicationRunListener {
 	 * @param exception the failure
 	 * @since 2.0.0
 	 */
+	//在运行程序的时候发生错误的时候调用
 	default void failed(ConfigurableApplicationContext context, Throwable exception) {
 	}
 

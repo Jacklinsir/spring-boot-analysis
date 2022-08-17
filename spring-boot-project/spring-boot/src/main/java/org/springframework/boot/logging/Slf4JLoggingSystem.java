@@ -43,6 +43,7 @@ public abstract class Slf4JLoggingSystem extends AbstractLoggingSystem {
 	@Override
 	public void beforeInitialize() {
 		super.beforeInitialize();
+		//配置jdk日志桥接控制器
 		configureJdkLoggingBridgeHandler();
 	}
 
@@ -64,8 +65,12 @@ public abstract class Slf4JLoggingSystem extends AbstractLoggingSystem {
 
 	private void configureJdkLoggingBridgeHandler() {
 		try {
+			//
+			// 判断是否有org.slf4j.bridge.SLF4JBridgeHandler,判断是否有handler为空，或者只有consolehandler
 			if (isBridgeJulIntoSlf4j()) {
+				// 移除handler
 				removeJdkLoggingBridgeHandler();
+				// 将SLF4JBridgeHandler加入进去
 				SLF4JBridgeHandler.install();
 			}
 		}

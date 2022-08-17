@@ -51,6 +51,11 @@ import org.springframework.util.ErrorHandler;
  * @author Chris Bono
  * @since 1.0.0
  */
+
+/**
+ * 事件发布运行监听器
+ * EventPublishingRunListener 对springboot的各个生命周期阶段做了实现，使用了SimpleApplicationEventMulticaster#multicastEvent来分发事件
+ */
 public class EventPublishingRunListener implements SpringApplicationRunListener, Ordered {
 
 	private final SpringApplication application;

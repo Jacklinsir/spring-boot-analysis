@@ -236,7 +236,7 @@ public class SpringApplication {
 	 * beans from the specified primary sources (see {@link SpringApplication class-level}
 	 * documentation for details). The instance can be customized before calling
 	 * {@link #run(String...)}.
-	 * @param primarySources the primary bean sources
+	 * @param primarySources the primary bean sources （主要bean的来源）
 	 * @see #run(Class, String[])
 	 * @see #SpringApplication(ResourceLoader, Class...)
 	 * @see #setSources(Set)
@@ -257,14 +257,21 @@ public class SpringApplication {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
+		//初始化资源加载器
 		this.resourceLoader = resourceLoader;
 		Assert.notNull(primarySources, "PrimarySources must not be null");
+		// 设置主配置源
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
+		//设置程序是什么类型《NONE,SERVILET, REACTIVE》
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
+		//设置spring工厂实例
 		this.bootstrapRegistryInitializers = new ArrayList<>(
 				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
+		//设置监听器初始化
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
+		//设置监听器
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+		//设置主程序的class
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
@@ -291,10 +298,15 @@ public class SpringApplication {
 	 */
 	public ConfigurableApplicationContext run(String... args) {
 		long startTime = System.nanoTime();
+		//初始化启动上下文
 		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
+		//创建一个配置上下文变量
 		ConfigurableApplicationContext context = null;
+		//配置Headless属性（此模式会对没有显示器等输入输出设备的程序做一些处理）
 		configureHeadlessProperty();
+		//获取运行监听器
 		SpringApplicationRunListeners listeners = getRunListeners(args);
+		//调用监听器的开始方法，内部会批量的调用监听器的starting方法，以发送事件等来间接调用ApplicationListener
 		listeners.starting(bootstrapContext, this.mainApplicationClass);
 		try {
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
@@ -428,6 +440,7 @@ public class SpringApplication {
 	private SpringApplicationRunListeners getRunListeners(String[] args) {
 		Class<?>[] types = new Class<?>[] { SpringApplication.class, String[].class };
 		return new SpringApplicationRunListeners(logger,
+				//SpringApplicationRunListener 事件发布运行监听器
 				getSpringFactoriesInstances(SpringApplicationRunListener.class, types, this, args),
 				this.applicationStartup);
 	}
@@ -439,7 +452,9 @@ public class SpringApplication {
 	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
 		ClassLoader classLoader = getClassLoader();
 		// Use names and ensure unique to protect against duplicates
+		//SpringFactoriesLoader.loadFactoryNames()用于加载框架内部的META-INF/spring.factories
 		Set<String> names = new LinkedHashSet<>(SpringFactoriesLoader.loadFactoryNames(type, classLoader));
+		//根据META-INF/spring.factories加载出来的内容创建实例
 		List<T> instances = createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);
 		AnnotationAwareOrderComparator.sort(instances);
 		return instances;
@@ -706,6 +721,7 @@ public class SpringApplication {
 	 * @return a ClassLoader (never null)
 	 */
 	public ClassLoader getClassLoader() {
+		//判断资源加载器是否为空，如果为空则使用ClassUtils方法获取默认加载器
 		if (this.resourceLoader != null) {
 			return this.resourceLoader.getClassLoader();
 		}
@@ -1298,8 +1314,8 @@ public class SpringApplication {
 	/**
 	 * Static helper that can be used to run a {@link SpringApplication} from the
 	 * specified source using default settings.
-	 * @param primarySource the primary source to load
-	 * @param args the application arguments (usually passed from a Java main method)
+	 * @param primarySource the primary source to load （要加载的主要来源）
+	 * @param args the application arguments (usually passed from a Java main method) 应用参数
 	 * @return the running {@link ApplicationContext}
 	 */
 	public static ConfigurableApplicationContext run(Class<?> primarySource, String... args) {

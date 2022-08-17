@@ -98,11 +98,17 @@ public class BackgroundPreinitializer implements ApplicationListener<SpringAppli
 
 				@Override
 				public void run() {
+					// 运行一个类型转换初始化线程
 					runSafely(new ConversionServiceInitializer());
+					// 运行一个校验初始化线程
 					runSafely(new ValidationInitializer());
+					// 运行一个消息转换初始化线程
 					runSafely(new MessageConverterInitializer());
+					// 运行一个jackson初始化线程
 					runSafely(new JacksonInitializer());
+					// 运行一个字符初始化线程
 					runSafely(new CharsetInitializer());
+					// 计数
 					preinitializationComplete.countDown();
 				}
 
